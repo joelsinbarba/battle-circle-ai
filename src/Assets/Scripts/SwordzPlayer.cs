@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.UI;
 [AddComponentMenu("DudeWorld/Swordz Player")]
 public class SwordzPlayer : MonoBehaviour
 {	
 	public int humanPlayer;
 	public BlockMeter lifeMeter;
-	public GUIText statusText;
+	public Text statusText;
 	public Color playerColor;
 	public string characterFile;
 	public bool mouseControls = false;
@@ -52,7 +52,7 @@ public class SwordzPlayer : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		//healthPerBlock = dude.maxHealth / lifeMeter.maxBlocks;
-		if(mouseControls) Screen.showCursor = true;
+		if(mouseControls) Cursor.visible = true;
 	}
 
 	void FixedUpdate()
@@ -70,6 +70,11 @@ public class SwordzPlayer : MonoBehaviour
 		Instantiate(respawnPrefab, lastSafePosition, Quaternion.identity);
 		
 		transform.position = lastSafePosition;
+	}
+	
+	public void OnCancel()
+	{
+		// this.followUpQueued = false;
 	}
 	
 	void Update ()

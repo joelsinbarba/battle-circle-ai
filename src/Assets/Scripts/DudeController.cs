@@ -30,7 +30,7 @@ public class DudeController : MonoBehaviour
 		
 		cam = Camera.main;
 		
-		if( aimMethod == "mouse" ) Screen.showCursor = true;
+		if( aimMethod == "mouse" ) Cursor.visible = true;
 		
 		// automatically set up move axes to match the camera
 		SetMovementAxes(cam.transform.right * 0.5f, cam.transform.forward * 0.5f);

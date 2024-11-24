@@ -5,9 +5,9 @@ public class ParticleAutodestruct : MonoBehaviour
 {
 	void Start ()
 	{
-		if(!particleSystem.loop)
+		if(!GetComponent<ParticleSystem>().loop)
 		{
-			Destroy(gameObject, particleSystem.duration);
+			Destroy(gameObject, GetComponent<ParticleSystem>().duration);
 		}
 	}
 	
@@ -19,8 +19,8 @@ public class ParticleAutodestruct : MonoBehaviour
 	static public void DestroyGracefully(GameObject go)
 	{
 		go.transform.parent = null;
-		go.particleSystem.loop = false;
-		go.particleSystem.enableEmission = false;
-		Destroy(go, go.particleSystem.duration);
+		go.GetComponent<ParticleSystem>().loop = false;
+		go.GetComponent<ParticleSystem>().enableEmission = false;
+		Destroy(go, go.GetComponent<ParticleSystem>().duration);
 	}
 }

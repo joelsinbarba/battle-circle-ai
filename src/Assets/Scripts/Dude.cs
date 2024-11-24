@@ -236,7 +236,7 @@ public class Dude : MonoBehaviour
 		
 		// if it collides, use Item and WorldObject as inputs to interaction rule logic
 		List<Collider> hits = new List<Collider>(Physics.OverlapSphere(snappedPos,0.25f));
-		hits.Remove(this.collider); // doesn't throw exception
+		hits.Remove(this.GetComponent<Collider>()); // doesn't throw exception
 
 		return hits;
 	}

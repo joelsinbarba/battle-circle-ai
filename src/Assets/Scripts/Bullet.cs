@@ -20,106 +20,92 @@ public class Bullet : MonoBehaviour {
 	public string[] effects;
 	
 	private float distanceTravelled = 0.0f;
+
+	private Rigidbody rb;
 	
 	void Start() {
-		if(owner == null)
+		if (owner == null)
 			owner = gameObject;
-		
-		// this is a horrible hack
-		if(speed == 0.0f)
-		{
+
+		rb = GetComponent<Rigidbody>();
+
+		// Hack to handle speed and range calculation
+		if (speed == 0.0f) {
 			life = range;
-		}
-		else if(!environmental)
-		{
-			// must push the bullet here so that life calculation is correct
-			rigidbody.AddForce(transform.forward * speed);
-				
-			//float fakespeed = speed * 0.02f;
-			//life = (range / fakespeed);
+		} else if (!environmental) {
+			// Apply force to bullet
+			rb.AddForce(transform.forward * speed, ForceMode.VelocityChange);
 			life = (range / speed);
 		}
 		
-		if( shakesCamera )
-		{
-			Camera.main.SendMessage("DoEffect", 0.1f);
-		}
+		/*if (shakesCamera && Camera.main != null) {
+			// Access camera shake effect directly instead of using SendMessage
+			Camera.main.GetComponent<CameraShake>()?.Shake(0.1f);
+		}*/
 	}
 	
-	void FixedUpdate()
-	{
-		if(!environmental)
-		{
+	void FixedUpdate() {
+		if (!environmental) {
 			life -= Time.fixedDeltaTime;
-			if(life <= 0.0)
-			{
+			if (life <= 0.0f) {
 				OnKill();
 			}
 		}
 	}
 	
-	void OnCollisionEnter(Collision c)
-	{
+	void OnCollisionEnter(Collision c) {
 		OnTriggerEnter(c.collider);
 	}
 	
-	void OnTriggerEnter(Collider other)
-	{	
-		if(other.isTrigger) return;
-		
-		if(this.data == null)
+	void OnTriggerEnter(Collider other) {	
+		if (other.isTrigger) return;
+
+		if (this.data == null)
 			this.data = new DamageEvent(this.owner, damage, knockbackForce, 0, team);
-		
-		if(this.data.owner == null)
+
+		if (this.data.owner == null)
 			this.data.owner = gameObject;
-		
-		if(effects.Length > 0)
-		{
-			foreach(string effect in effects)
-			{
+
+		// Apply effects
+		if (effects.Length > 0) {
+			foreach (string effect in effects) {
 				string[] bits = effect.Split('=');
-				this.data.effects[bits[0]] = float.Parse(bits[1]);
+				if (bits.Length == 2) {
+					this.data.effects[bits[0]] = float.Parse(bits[1]);
+				}
 			}
 		}
-		
+
 		this.data.bullet = gameObject;
 		this.data.victim = other.gameObject;
-		
-		if(speed > 0.0f)
+
+		if (speed > 0.0f)
 			this.data.ranged = true;
-		
+
 		other.gameObject.SendMessage("OnShot", this.data, SendMessageOptions.DontRequireReceiver);
-		//this.data.owner.BroadcastMessage("OnShotHit", this.data, SendMessageOptions.DontRequireReceiver);
-		
-		if(!penetrates)
+
+		if (!penetrates)
 			OnKill();
-		
-		//if(other.gameObject.GetComponent(Dude) == null)
-		//{
-		//	OnKill();
-		//}
-		
 	}
 	
-	void OnKill()
-	{
-		if(environmental) return;
-		
-		if(boom != null)
-		{
-			var boomObj = Instantiate(boom, transform.position, transform.rotation) as GameObject;
+	void OnKill() {
+		if (environmental) return;
+
+		if (boom != null) {
+			Instantiate(boom, transform.position, transform.rotation);
 		}
 		
-		if(GetComponentInChildren(typeof(TrailRenderer)) != null)	
-			transform.DetachChildren();
-		
-		if(GetComponentInChildren(typeof(ParticleEmitter)) != null)
-		{
-			foreach(ParticleEmitter particle in GetComponentsInChildren(typeof(ParticleEmitter)))
-			{
-				particle.emit = false;
-			}
-			transform.DetachChildren();
+		// Detach trail if present
+		var trail = GetComponentInChildren<TrailRenderer>();
+		if (trail != null) {
+			trail.transform.parent = null;
+		}
+
+		// Handle ParticleSystems (replaces deprecated ParticleEmitter)
+		var particleSystems = GetComponentsInChildren<ParticleSystem>();
+		foreach (var particleSystem in particleSystems) {
+			particleSystem.Stop();
+			particleSystem.transform.parent = null; // Detach
 		}
 		
 		Destroy(gameObject);

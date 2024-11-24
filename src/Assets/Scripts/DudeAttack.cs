@@ -120,13 +120,13 @@ public class DudeAttack : MonoBehaviour
 			swing.damage.team = damageable.team;
 			swing.damage.owner = owner.gameObject;
 			b.data = swing.damage;
-			Physics.IgnoreCollision(clone.collider, owner.collider);
+			Physics.IgnoreCollision(clone.GetComponent<Collider>(), owner.GetComponent<Collider>());
 		}
 		
 		// turn on debug to see swing colliders
 		if(debug)
 		{
-			clone.renderer.enabled = true;
+			clone.GetComponent<Renderer>().enabled = true;
 		}
 		
 		yield return new WaitForSeconds(recoveryTime);

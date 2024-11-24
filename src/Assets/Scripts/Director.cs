@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Director : MonoBehaviour
 {
 	public Damageable player;
-	public GUIText biffedGUI;
-	public GUIText healthGUI;
+	public Text biffedGUI;
+	public Text healthGUI;
 	public Transform gameOverGUI;
 	public Transform restartGUI;
 	public AISettings settings;
@@ -55,7 +56,7 @@ public class Director : MonoBehaviour
 
 		if(demoMode)
 		{
-			audio.Stop();
+			GetComponent<AudioSource>().Stop();
 			player.maxHealth = 999999;
 			player.AddHealth(999999);
 		}

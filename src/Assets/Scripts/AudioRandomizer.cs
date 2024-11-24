@@ -18,23 +18,23 @@ public class AudioRandomizer : MonoBehaviour {
 	public void PlayRandom()
 	{
 		Randomize();
-		audio.Play();
+		GetComponent<AudioSource>().Play();
 	}
 	
 	public void Randomize()
 	{
-		var originalPitch = audio.pitch;
+		var originalPitch = GetComponent<AudioSource>().pitch;
 		var pitch = (Random.value * (maxPitch - minPitch)) + minPitch;
-		audio.pitch = pitch;
+		GetComponent<AudioSource>().pitch = pitch;
 		
-		var originalVolume = audio.volume;
+		var originalVolume = GetComponent<AudioSource>().volume;
 		var volume = (Random.value * (maxVolume - minVolume)) + minVolume;
-		audio.volume = volume;
+		GetComponent<AudioSource>().volume = volume;
 		
 		if(audioClips.Length > 0)
 		{
 			var index = Random.Range(0, audioClips.Length);
-			audio.clip = audioClips[index];
+			GetComponent<AudioSource>().clip = audioClips[index];
 		}
 	}
 	

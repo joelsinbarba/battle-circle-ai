@@ -78,7 +78,7 @@ public class EnemyMob : MonoBehaviour
 		avoider = gameObject.GetComponentInChildren<Avoider>();
 		if(avoider != null)
 		{
-			Physics.IgnoreCollision(collider, avoider.collider);
+			Physics.IgnoreCollision(GetComponent<Collider>(), avoider.GetComponent<Collider>());
 		}
 		
 		sqrAttackDistance = Mathf.Pow(attackDistance, 2);

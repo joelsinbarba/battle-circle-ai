@@ -55,9 +55,9 @@ public class Flicker : MonoBehaviour
 			foreach(Renderer r in renderers)
 				r.enabled = state;
 		}
-		else if(renderer != null)
+		else if(GetComponent<Renderer>() != null)
 		{
-			renderer.enabled = state;
+			GetComponent<Renderer>().enabled = state;
 		}
 		
 		showing = state;
